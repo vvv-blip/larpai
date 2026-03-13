@@ -1,0 +1,1056 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LARP AI — The World's Most Advanced Pretend Intelligence</title>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=VT323&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green: #00ff41;
+    --green-dim: #00aa2a;
+    --green-dark: #003a0e;
+    --green-faint: rgba(0,255,65,0.07);
+    --black: #000000;
+    --bg: #020f04;
+    --amber: #ffb300;
+    --red: #ff3131;
+    --white: #e8ffe8;
+  }
+
+- { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+background: var(–bg);
+color: var(–green);
+font-family: ‘Share Tech Mono’, monospace;
+overflow-x: hidden;
+cursor: crosshair;
+}
+
+/* Scanlines overlay */
+body::before {
+content: ‘’;
+position: fixed;
+top: 0; left: 0; right: 0; bottom: 0;
+background: repeating-linear-gradient(
+0deg,
+transparent,
+transparent 2px,
+rgba(0,0,0,0.15) 2px,
+rgba(0,0,0,0.15) 4px
+);
+pointer-events: none;
+z-index: 9999;
+}
+
+/* CRT flicker */
+@keyframes flicker {
+0%,100% { opacity: 1; }
+92% { opacity: 1; }
+93% { opacity: 0.85; }
+94% { opacity: 1; }
+96% { opacity: 0.9; }
+97% { opacity: 1; }
+}
+body { animation: flicker 8s infinite; }
+
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+@keyframes typewriter { from{width:0} to{width:100%} }
+@keyframes glitch {
+0%,100% { transform: translate(0); }
+20% { transform: translate(-2px, 1px); }
+40% { transform: translate(2px, -1px); }
+60% { transform: translate(-1px, 2px); }
+80% { transform: translate(1px, -2px); }
+}
+@keyframes fadeInUp {
+from { opacity:0; transform: translateY(20px); }
+to { opacity:1; transform: translateY(0); }
+}
+@keyframes pulse-green {
+0%,100% { box-shadow: 0 0 5px var(–green), 0 0 10px var(–green); }
+50% { box-shadow: 0 0 20px var(–green), 0 0 40px var(–green), 0 0 60px var(–green-dim); }
+}
+@keyframes matrix-rain {
+0% { transform: translateY(-100%); opacity: 1; }
+100% { transform: translateY(100vh); opacity: 0; }
+}
+@keyframes scroll-ticker {
+0% { transform: translateX(100vw); }
+100% { transform: translateX(-100%); }
+}
+
+/* NAV */
+nav {
+position: fixed; top: 0; left: 0; right: 0;
+padding: 12px 40px;
+background: rgba(0,0,0,0.9);
+border-bottom: 1px solid var(–green-dim);
+display: flex; align-items: center; justify-content: space-between;
+z-index: 1000;
+backdrop-filter: blur(4px);
+}
+.nav-logo {
+font-family: ‘VT323’, monospace;
+font-size: 28px;
+color: var(–green);
+text-shadow: 0 0 10px var(–green);
+letter-spacing: 3px;
+}
+.nav-logo span { color: var(–amber); }
+.nav-links { display: flex; gap: 30px; }
+.nav-links a {
+color: var(–green-dim);
+text-decoration: none;
+font-size: 12px;
+letter-spacing: 2px;
+transition: color 0.2s;
+}
+.nav-links a:hover { color: var(–green); text-shadow: 0 0 8px var(–green); }
+.nav-status {
+font-size: 11px;
+color: var(–green-dim);
+display: flex; align-items: center; gap: 8px;
+}
+.status-dot {
+width: 7px; height: 7px;
+background: var(–green);
+border-radius: 50%;
+animation: blink 1.2s infinite;
+box-shadow: 0 0 6px var(–green);
+}
+
+/* TICKER */
+.ticker {
+position: fixed; top: 50px; left: 0; right: 0;
+background: var(–green-dark);
+border-bottom: 1px solid var(–green-dim);
+padding: 5px 0;
+overflow: hidden;
+z-index: 999;
+}
+.ticker-inner {
+white-space: nowrap;
+animation: scroll-ticker 35s linear infinite;
+font-size: 11px;
+color: var(–green);
+letter-spacing: 2px;
+}
+.ticker-inner span { color: var(–amber); margin: 0 8px; }
+
+/* HERO */
+.hero {
+min-height: 100vh;
+display: flex; flex-direction: column;
+align-items: center; justify-content: center;
+padding: 120px 40px 60px;
+position: relative;
+text-align: center;
+}
+
+.boot-log {
+position: absolute; top: 90px; left: 40px;
+font-size: 10px;
+color: var(–green-dim);
+text-align: left;
+opacity: 0.6;
+line-height: 1.8;
+}
+
+.hero-eyebrow {
+font-size: 11px;
+letter-spacing: 6px;
+color: var(–green-dim);
+margin-bottom: 20px;
+animation: fadeInUp 0.8s ease forwards;
+}
+
+.hero-title {
+font-family: ‘VT323’, monospace;
+font-size: clamp(72px, 12vw, 140px);
+line-height: 0.9;
+color: var(–green);
+text-shadow: 0 0 20px var(–green), 0 0 40px var(–green-dim);
+animation: fadeInUp 0.8s ease 0.2s forwards, glitch 10s infinite 3s;
+opacity: 0;
+margin-bottom: 10px;
+letter-spacing: 4px;
+}
+.hero-title .ai { color: var(–amber); text-shadow: 0 0 20px var(–amber); }
+
+.hero-subtitle {
+font-family: ‘VT323’, monospace;
+font-size: clamp(18px, 3vw, 28px);
+color: var(–green-dim);
+margin-bottom: 40px;
+animation: fadeInUp 0.8s ease 0.4s forwards;
+opacity: 0;
+letter-spacing: 2px;
+}
+
+.hero-terminal {
+background: rgba(0,0,0,0.8);
+border: 1px solid var(–green-dim);
+border-radius: 4px;
+padding: 20px 28px;
+max-width: 640px;
+width: 100%;
+text-align: left;
+margin-bottom: 40px;
+animation: fadeInUp 0.8s ease 0.6s forwards;
+opacity: 0;
+box-shadow: 0 0 30px rgba(0,255,65,0.1);
+}
+.terminal-line { font-size: 13px; line-height: 2; }
+.terminal-line .prompt { color: var(–green-dim); }
+.terminal-line .cmd { color: var(–white); }
+.terminal-line .output { color: var(–green); }
+.terminal-line .warn { color: var(–amber); }
+.terminal-line .err { color: var(–red); }
+.cursor {
+display: inline-block; width: 8px; height: 14px;
+background: var(–green);
+animation: blink 1s infinite;
+vertical-align: middle;
+margin-left: 2px;
+}
+
+.hero-cta {
+display: flex; gap: 16px; flex-wrap: wrap; justify-content: center;
+animation: fadeInUp 0.8s ease 0.8s forwards;
+opacity: 0;
+}
+
+.btn-primary {
+font-family: ‘Share Tech Mono’, monospace;
+font-size: 13px;
+letter-spacing: 3px;
+padding: 14px 32px;
+background: var(–green);
+color: var(–black);
+border: none;
+cursor: pointer;
+text-transform: uppercase;
+font-weight: bold;
+transition: all 0.2s;
+text-decoration: none;
+display: inline-block;
+animation: pulse-green 2s infinite;
+}
+.btn-primary:hover { background: var(–white); transform: scale(1.04); }
+
+.btn-secondary {
+font-family: ‘Share Tech Mono’, monospace;
+font-size: 13px;
+letter-spacing: 3px;
+padding: 14px 32px;
+background: transparent;
+color: var(–green);
+border: 1px solid var(–green-dim);
+cursor: pointer;
+text-transform: uppercase;
+transition: all 0.2s;
+text-decoration: none;
+display: inline-block;
+}
+.btn-secondary:hover { border-color: var(–green); box-shadow: 0 0 12px rgba(0,255,65,0.3); }
+
+/* STATS BAR */
+.stats-bar {
+background: var(–green-dark);
+border-top: 1px solid var(–green-dim);
+border-bottom: 1px solid var(–green-dim);
+padding: 16px 0;
+display: flex;
+justify-content: center;
+gap: 0;
+}
+.stat-item {
+text-align: center;
+padding: 0 40px;
+border-right: 1px solid var(–green-dim);
+}
+.stat-item:last-child { border-right: none; }
+.stat-num {
+font-family: ‘VT323’, monospace;
+font-size: 36px;
+color: var(–amber);
+text-shadow: 0 0 10px var(–amber);
+display: block;
+}
+.stat-label { font-size: 10px; color: var(–green-dim); letter-spacing: 2px; }
+
+/* SECTIONS */
+section { padding: 80px 40px; max-width: 1100px; margin: 0 auto; }
+
+.section-header {
+font-size: 11px;
+letter-spacing: 6px;
+color: var(–green-dim);
+margin-bottom: 12px;
+}
+.section-title {
+font-family: ‘VT323’, monospace;
+font-size: clamp(40px, 6vw, 64px);
+color: var(–green);
+text-shadow: 0 0 15px var(–green-dim);
+margin-bottom: 40px;
+line-height: 1;
+}
+
+/* FEATURES */
+.features-grid {
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+gap: 1px;
+background: var(–green-dim);
+border: 1px solid var(–green-dim);
+}
+.feature-card {
+background: var(–bg);
+padding: 32px;
+transition: background 0.2s;
+}
+.feature-card:hover { background: var(–green-faint); }
+.feature-icon {
+font-family: ‘VT323’, monospace;
+font-size: 40px;
+color: var(–amber);
+margin-bottom: 12px;
+display: block;
+}
+.feature-title {
+font-size: 14px;
+letter-spacing: 2px;
+color: var(–white);
+margin-bottom: 10px;
+text-transform: uppercase;
+}
+.feature-desc {
+font-size: 12px;
+color: var(–green-dim);
+line-height: 1.7;
+}
+.feature-badge {
+display: inline-block;
+margin-top: 12px;
+font-size: 10px;
+padding: 3px 8px;
+border: 1px solid var(–green-dim);
+color: var(–green-dim);
+letter-spacing: 2px;
+}
+.feature-badge.soon { border-color: var(–amber); color: var(–amber); }
+.feature-badge.fake { border-color: var(–red); color: var(–red); }
+
+/* WHITEPAPER */
+.whitepaper {
+background: rgba(0,0,0,0.6);
+border: 1px solid var(–green-dim);
+padding: 48px;
+position: relative;
+}
+.whitepaper::before {
+content: ‘CLASSIFIED’;
+position: absolute;
+top: 20px; right: 20px;
+font-family: ‘VT323’, monospace;
+font-size: 18px;
+color: var(–red);
+border: 1px solid var(–red);
+padding: 2px 10px;
+opacity: 0.6;
+transform: rotate(3deg);
+}
+.wp-section { margin-bottom: 32px; }
+.wp-heading {
+font-size: 11px;
+letter-spacing: 4px;
+color: var(–amber);
+margin-bottom: 10px;
+}
+.wp-text {
+font-size: 12px;
+color: var(–green-dim);
+line-height: 1.9;
+}
+.wp-text strong { color: var(–green); }
+.wp-formula {
+background: rgba(0,255,65,0.05);
+border-left: 2px solid var(–green-dim);
+padding: 12px 20px;
+margin: 16px 0;
+font-size: 13px;
+color: var(–white);
+font-style: italic;
+}
+
+/* TOKENOMICS */
+.tokenomics-grid {
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+gap: 16px;
+margin-top: 32px;
+}
+.token-slice {
+border: 1px solid var(–green-dim);
+padding: 24px;
+text-align: center;
+position: relative;
+overflow: hidden;
+}
+.token-slice::before {
+content: ‘’;
+position: absolute;
+bottom: 0; left: 0; right: 0;
+background: var(–green-faint);
+transition: height 0.6s ease;
+}
+.token-pct {
+font-family: ‘VT323’, monospace;
+font-size: 48px;
+color: var(–amber);
+display: block;
+text-shadow: 0 0 10px var(–amber);
+position: relative;
+}
+.token-name {
+font-size: 11px;
+color: var(–green-dim);
+letter-spacing: 2px;
+position: relative;
+}
+.token-note {
+font-size: 10px;
+color: var(–red);
+margin-top: 6px;
+position: relative;
+}
+
+/* ROADMAP */
+.roadmap {
+position: relative;
+padding-left: 40px;
+}
+.roadmap::before {
+content: ‘’;
+position: absolute;
+left: 8px; top: 0; bottom: 0;
+width: 1px;
+background: var(–green-dim);
+}
+.roadmap-item {
+position: relative;
+margin-bottom: 36px;
+}
+.roadmap-item::before {
+content: ‘█’;
+position: absolute;
+left: -36px;
+color: var(–green);
+font-size: 10px;
+top: 3px;
+}
+.roadmap-item.done::before { color: var(–amber); }
+.roadmap-item.never::before { color: var(–red); content: ‘✕’; }
+.roadmap-phase {
+font-size: 10px;
+letter-spacing: 3px;
+color: var(–green-dim);
+margin-bottom: 4px;
+}
+.roadmap-title {
+font-family: ‘VT323’, monospace;
+font-size: 26px;
+color: var(–white);
+margin-bottom: 4px;
+}
+.roadmap-desc { font-size: 12px; color: var(–green-dim); line-height: 1.7; }
+
+/* TEAM */
+.team-grid {
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+gap: 1px;
+background: var(–green-dim);
+border: 1px solid var(–green-dim);
+margin-top: 32px;
+}
+.team-card {
+background: var(–bg);
+padding: 28px;
+}
+.team-avatar {
+font-family: ‘VT323’, monospace;
+font-size: 52px;
+display: block;
+margin-bottom: 8px;
+filter: grayscale(1) brightness(0.7) sepia(1) hue-rotate(80deg);
+}
+.team-name {
+font-size: 13px;
+color: var(–white);
+letter-spacing: 2px;
+margin-bottom: 4px;
+}
+.team-role {
+font-size: 10px;
+color: var(–amber);
+letter-spacing: 2px;
+margin-bottom: 8px;
+}
+.team-bio { font-size: 11px; color: var(–green-dim); line-height: 1.7; }
+
+/* TERMINAL DEMO */
+.terminal-demo {
+background: #000;
+border: 1px solid var(–green-dim);
+border-radius: 2px;
+overflow: hidden;
+box-shadow: 0 0 40px rgba(0,255,65,0.15);
+}
+.terminal-titlebar {
+background: var(–green-dark);
+padding: 8px 16px;
+display: flex;
+align-items: center;
+gap: 8px;
+border-bottom: 1px solid var(–green-dim);
+}
+.terminal-dot { width: 10px; height: 10px; border-radius: 50%; }
+.terminal-titlebar-text {
+margin-left: 8px;
+font-size: 11px;
+color: var(–green-dim);
+letter-spacing: 2px;
+}
+.terminal-body { padding: 24px; font-size: 13px; line-height: 2.1; }
+.t-prompt { color: var(–green-dim); }
+.t-cmd { color: var(–white); }
+.t-res { color: var(–green); }
+.t-warn { color: var(–amber); }
+.t-err { color: var(–red); }
+.t-comment { color: #3a6e3a; }
+
+/* FAQ */
+.faq-list { margin-top: 32px; }
+.faq-item {
+border-bottom: 1px solid var(–green-dark);
+padding: 20px 0;
+}
+.faq-q {
+font-size: 13px;
+color: var(–white);
+letter-spacing: 1px;
+margin-bottom: 10px;
+cursor: pointer;
+}
+.faq-q::before { content: ’> ’; color: var(–green); }
+.faq-a { font-size: 12px; color: var(–green-dim); line-height: 1.8; padding-left: 16px; }
+
+/* FOOTER */
+footer {
+border-top: 1px solid var(–green-dim);
+padding: 40px;
+text-align: center;
+font-size: 11px;
+color: var(–green-dim);
+line-height: 2;
+}
+footer .footer-logo {
+font-family: ‘VT323’, monospace;
+font-size: 32px;
+color: var(–green);
+text-shadow: 0 0 10px var(–green);
+display: block;
+margin-bottom: 12px;
+}
+.disclaimer {
+max-width: 600px;
+margin: 16px auto 0;
+font-size: 10px;
+color: #1a4a1a;
+line-height: 1.8;
+}
+
+/* MATRIX BG */
+.matrix-bg {
+position: fixed;
+top: 0; left: 0; right: 0; bottom: 0;
+pointer-events: none;
+z-index: 0;
+overflow: hidden;
+opacity: 0.03;
+}
+.matrix-col {
+position: absolute;
+top: 0;
+font-family: ‘Share Tech Mono’, monospace;
+font-size: 14px;
+color: var(–green);
+animation: matrix-rain linear infinite;
+white-space: nowrap;
+writing-mode: vertical-rl;
+letter-spacing: 4px;
+}
+
+.page-content { position: relative; z-index: 1; }
+
+/* GLOW DIVIDER */
+.glow-divider {
+height: 1px;
+background: linear-gradient(90deg, transparent, var(–green-dim), transparent);
+margin: 0 40px;
+}
+
+@media (max-width: 600px) {
+nav { padding: 12px 20px; }
+.nav-links { display: none; }
+section { padding: 60px 20px; }
+.stats-bar { flex-wrap: wrap; }
+.stat-item { border-right: none; border-bottom: 1px solid var(–green-dim); width: 50%; }
+.whitepaper { padding: 24px; }
+}
+</style>
+
+</head>
+<body>
+
+<!-- Matrix background -->
+
+<div class="matrix-bg" id="matrixBg"></div>
+
+<div class="page-content">
+
+<!-- NAV -->
+
+<nav>
+  <div class="nav-logo">LARP<span>AI</span></div>
+  <div class="nav-links">
+    <a href="#features">FEATURES</a>
+    <a href="#whitepaper">WHITEPAPER</a>
+    <a href="#tokenomics">TOKENOMICS</a>
+    <a href="#roadmap">ROADMAP</a>
+    <a href="#team">TEAM</a>
+  </div>
+  <div class="nav-status">
+    <div class="status-dot"></div>
+    SYSTEMS NOMINAL (PROBABLY)
+  </div>
+</nav>
+
+<!-- TICKER -->
+
+<div class="ticker">
+  <div class="ticker-inner">
+    $LARPAI +∞%<span>▲</span> &nbsp;·&nbsp; INTELLIGENCE STATUS: SIMULATED &nbsp;·&nbsp; WHITEPAPER: 47 PAGES OF LOREM IPSUM &nbsp;·&nbsp; ROADMAP Q4 2026: "MORE STUFF" &nbsp;·&nbsp; TEAM MEMBERS: ANONYMOUS (VERY PROFESSIONAL) &nbsp;·&nbsp; TVL: $0.00 (BUILDING) &nbsp;·&nbsp; AUDITED BY: MY FRIEND &nbsp;·&nbsp; PARTNERSHIPS: UNDER NDA &nbsp;·&nbsp; BACKERS: DEFINITELY REAL VCS &nbsp;·&nbsp; $LARPAI +∞%<span>▲</span> &nbsp;·&nbsp; NOT FINANCIAL ADVICE &nbsp;·&nbsp; THIS IS SATIRE &nbsp;·&nbsp; WE ARE SO BACK
+  </div>
+</div>
+
+<!-- HERO -->
+
+<div class="hero">
+  <div class="boot-log">
+    BIOS v2.6.0 | LARPAI SYSTEMS INC.<br>
+    MEMORY CHECK: 69,420 KB OK<br>
+    LOADING INTELLIGENCE MODULE... ████████░░ 84%<br>
+    WARNING: INTELLIGENCE MODULE NOT FOUND<br>
+    LOADING CONFIDENCE MODULE... ██████████ 100%<br>
+    BOOT SEQUENCE COMPLETE. PRETENDING TO START.
+  </div>
+
+  <p class="hero-eyebrow">INTRODUCING THE WORLD'S MOST ADVANCED</p>
+  <h1 class="hero-title">LARP<span class="ai">AI</span></h1>
+  <p class="hero-subtitle">// Pretend Intelligence for Real Degens //</p>
+
+  <div class="hero-terminal">
+    <div class="terminal-line"><span class="prompt">root@larpai:~$ </span><span class="cmd">./initialize_intelligence.sh</span></div>
+    <div class="terminal-line"><span class="output">> Loading neural networks... [FOUND 0]</span></div>
+    <div class="terminal-line"><span class="output">> Loading pretend neural networks... [FOUND 47,000]</span></div>
+    <div class="terminal-line"><span class="warn">> WARNING: Confidence exceeds competence by 4,700%</span></div>
+    <div class="terminal-line"><span class="output">> Generating alpha... done (quality: unverified)</span></div>
+    <div class="terminal-line"><span class="output">> Deploying on Solana... done</span></div>
+    <div class="terminal-line"><span class="err">> Audit scheduled: never</span></div>
+    <div class="terminal-line"><span class="output">> Status: FULLY OPERATIONAL AND DEFINITELY REAL</span></div>
+    <div class="terminal-line"><span class="prompt">root@larpai:~$ </span><span class="cursor"></span></div>
+  </div>
+
+  <div class="hero-cta">
+    <a href="#" class="btn-primary">BUY $LARPAI</a>
+    <a href="#whitepaper" class="btn-secondary">READ WHITEPAPER</a>
+  </div>
+</div>
+
+<!-- STATS -->
+
+<div class="stats-bar">
+  <div class="stat-item">
+    <span class="stat-num">∞</span>
+    <span class="stat-label">FAKE TRANSACTIONS/SEC</span>
+  </div>
+  <div class="stat-item">
+    <span class="stat-num">47K</span>
+    <span class="stat-label">SIMULATED NEURONS</span>
+  </div>
+  <div class="stat-item">
+    <span class="stat-num">0</span>
+    <span class="stat-label">REAL AI ENGINEERS</span>
+  </div>
+  <div class="stat-item">
+    <span class="stat-num">100%</span>
+    <span class="stat-label">CONFIDENCE (UNEARNED)</span>
+  </div>
+  <div class="stat-item">
+    <span class="stat-num">NaN</span>
+    <span class="stat-label">AUDITS PASSED</span>
+  </div>
+</div>
+
+<div class="glow-divider"></div>
+
+<!-- FEATURES -->
+
+<section id="features">
+  <p class="section-header">// CORE CAPABILITIES //</p>
+  <h2 class="section-title">FEATURES THAT PROBABLY WORK</h2>
+  <div class="features-grid">
+    <div class="feature-card">
+      <span class="feature-icon">🧠</span>
+      <div class="feature-title">ADVANCED PRETEND INTELLIGENCE</div>
+      <div class="feature-desc">Our proprietary LPI (Large Pretend Intelligence) model has been trained on 4.7 billion tweets, 200,000 CT threads, and one Medium article about blockchain. It is indistinguishable from a real AI if you don't ask it anything.</div>
+      <span class="feature-badge fake">NOT REAL</span>
+    </div>
+    <div class="feature-card">
+      <span class="feature-icon">📈</span>
+      <div class="feature-title">ALPHA GENERATION ENGINE</div>
+      <div class="feature-desc">LARPAI generates alpha in real time using a proprietary algorithm (random number between 1 and 100). Backtested returns: 847%. Forward-tested returns: we don't do that here. Trust the algo.</div>
+      <span class="feature-badge fake">UNVERIFIED</span>
+    </div>
+    <div class="feature-card">
+      <span class="feature-icon">🔐</span>
+      <div class="feature-title">QUANTUM SECURITY LAYER</div>
+      <div class="feature-desc">Your funds are protected by quantum encryption so advanced we don't understand it ourselves. The smart contract has been reviewed by our intern, Brayden, who took an online Solidity course last Tuesday.</div>
+      <span class="feature-badge fake">AUDITED*</span>
+    </div>
+    <div class="feature-card">
+      <span class="feature-icon">🤝</span>
+      <div class="feature-title">STRATEGIC PARTNERSHIPS</div>
+      <div class="feature-desc">We have partnerships with several major organizations we cannot name due to NDAs. These partnerships are real and definitely exist. Please do not ask follow-up questions about the partnerships.</div>
+      <span class="feature-badge soon">COMING SOON</span>
+    </div>
+    <div class="feature-card">
+      <span class="feature-icon">🌐</span>
+      <div class="feature-title">DECENTRALIZED EVERYTHING</div>
+      <div class="feature-desc">LARPAI is fully decentralized. The dev wallet controls 0% of supply (dev wallet controls 40% of supply). The protocol is governed by the community (the dev). All decisions are on-chain (in a group chat).</div>
+      <span class="feature-badge fake">PARTIALLY TRUE</span>
+    </div>
+    <div class="feature-card">
+      <span class="feature-icon">🚀</span>
+      <div class="feature-title">V2 COMING Q3 2026</div>
+      <div class="feature-desc">V2 will introduce real AI, actual utility, a working product, and a reason to hold. We have been saying this since Q3 2025. The difference this time is we really mean it. V2 will change everything. Probably.</div>
+      <span class="feature-badge soon">SOON™️</span>
+    </div>
+  </div>
+</section>
+
+<div class="glow-divider"></div>
+
+<!-- TERMINAL DEMO -->
+
+<section>
+  <p class="section-header">// LIVE SYSTEM OUTPUT //</p>
+  <h2 class="section-title">WATCH IT PRETEND</h2>
+  <div class="terminal-demo">
+    <div class="terminal-titlebar">
+      <div class="terminal-dot" style="background:#ff5f57"></div>
+      <div class="terminal-dot" style="background:#febc2e"></div>
+      <div class="terminal-dot" style="background:#28c840"></div>
+      <span class="terminal-titlebar-text">larpai_intelligence_core_v1.0.0 — bash</span>
+    </div>
+    <div class="terminal-body">
+      <div><span class="t-comment"># LARPAI INTELLIGENCE CORE — ACTIVE SESSION</span></div>
+      <div><span class="t-comment"># uptime: 4 days, 7 hours, 12 minutes</span></div>
+      <div>&nbsp;</div>
+      <div><span class="t-prompt">larpai@core:~$ </span><span class="t-cmd">analyze_market --token SOL --depth advanced</span></div>
+      <div><span class="t-res">> Scanning 847 data sources...</span></div>
+      <div><span class="t-res">> Cross-referencing 12,000 on-chain signals...</span></div>
+      <div><span class="t-warn">> WARNING: All signals pointing to "number go up"</span></div>
+      <div><span class="t-res">> CONCLUSION: Buy (this is not financial advice)</span></div>
+      <div>&nbsp;</div>
+      <div><span class="t-prompt">larpai@core:~$ </span><span class="t-cmd">generate_alpha --quality high</span></div>
+      <div><span class="t-res">> Accessing proprietary alpha database...</span></div>
+      <div><span class="t-err">> ERROR: Alpha database is just a Twitter list</span></div>
+      <div><span class="t-warn">> FALLBACK: Generating alpha from vibes... done</span></div>
+      <div><span class="t-res">> ALPHA: "The next 100x is the one you almost bought"</span></div>
+      <div>&nbsp;</div>
+      <div><span class="t-prompt">larpai@core:~$ </span><span class="t-cmd">check_rugpull_risk --contract $LARPAI</span></div>
+      <div><span class="t-res">> Analyzing contract... </span></div>
+      <div><span class="t-warn">> RESULT: Statistically, probably fine</span></div>
+      <div><span class="t-res">> CONFIDENCE: High (unverified)</span></div>
+      <div>&nbsp;</div>
+      <div><span class="t-prompt">larpai@core:~$ </span><span class="t-cmd">run_audit.sh</span></div>
+      <div><span class="t-err">> bash: audit.sh: No such file or directory</span></div>
+      <div><span class="t-warn">> Scheduling audit for Q4 2026...</span></div>
+      <div><span class="t-res">> Done. Audit scheduled.</span></div>
+      <div>&nbsp;</div>
+      <div><span class="t-prompt">larpai@core:~$ </span><span class="cursor"></span></div>
+    </div>
+  </div>
+</section>
+
+<div class="glow-divider"></div>
+
+<!-- WHITEPAPER -->
+
+<section id="whitepaper">
+  <p class="section-header">// ACADEMIC RESEARCH //</p>
+  <h2 class="section-title">THE WHITEPAPER</h2>
+  <div class="whitepaper">
+    <div class="wp-section">
+      <div class="wp-heading">ABSTRACT</div>
+      <div class="wp-text">
+        We present <strong>LARP AI</strong>, a novel framework for Simulated Autonomous Reasoning Protocol (SARP) on the Solana blockchain. In this paper, we demonstrate that <strong>confidence, when deployed at sufficient scale, is mathematically indistinguishable from competence</strong> to the average market participant. We propose a new consensus mechanism — Proof of Vibes (PoV) — which we believe will revolutionize the industry once we understand what a consensus mechanism is. Our experiments show a 4,700% improvement in perceived intelligence over baseline, with no measurable improvement in actual intelligence.
+      </div>
+    </div>
+    <div class="wp-section">
+      <div class="wp-heading">1. INTRODUCTION</div>
+      <div class="wp-text">
+        The AI agent memecoin space has been dominated by projects that pretend to have AI while actually having AI. We identified a gap in the market: a project that pretends to have AI while <strong>openly admitting it does not have AI</strong>. This radical transparency, we hypothesize, will build more trust than actual AI would. The implications for the broader market are significant and we will elaborate on them once we think of some implications.
+      </div>
+      <div class="wp-formula">
+        LARPscore = (Confidence × Marketing) / (Actual_Capability + 0.001)
+      </div>
+      <div class="wp-text">
+        As shown above, when Actual_Capability approaches zero, LARPscore approaches infinity. <strong>LARP AI has achieved an infinite LARPscore</strong>, making it the most advanced project in this category by our own metrics, which we invented.
+      </div>
+    </div>
+    <div class="wp-section">
+      <div class="wp-heading">2. TECHNICAL ARCHITECTURE</div>
+      <div class="wp-text">
+        LARP AI operates on a three-layer stack: <strong>Layer 1</strong> (the Solana blockchain, which we did not build), <strong>Layer 2</strong> (a smart contract our developer wrote while watching a YouTube tutorial), and <strong>Layer 3</strong> (a Telegram group). The system achieves 50,000 theoretical TPS, of which we are currently using approximately 3. The remaining capacity is reserved for V2.
+      </div>
+    </div>
+    <div class="wp-section">
+      <div class="wp-heading">3. CONCLUSION</div>
+      <div class="wp-text">
+        We have presented LARP AI, a groundbreaking framework for doing almost nothing with maximum confidence. Future work includes: building something, hiring someone who knows what they're doing, and writing the rest of this whitepaper. <strong>We believe the market will reward our honesty.</strong> If not, we will pivot to a different narrative. Citations available upon request (there are no citations).
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="glow-divider"></div>
+
+<!-- TOKENOMICS -->
+
+<section id="tokenomics">
+  <p class="section-header">// TOKEN DISTRIBUTION //</p>
+  <h2 class="section-title">TOKENOMICS</h2>
+  <div class="wp-text" style="margin-bottom:8px;">Total Supply: <strong style="color:var(--amber)">1,000,000,000 $LARPAI</strong> &nbsp;|&nbsp; "Fair Launch" on pump.fun</div>
+  <div class="tokenomics-grid">
+    <div class="token-slice">
+      <span class="token-pct">40%</span>
+      <div class="token-name">COMMUNITY</div>
+      <div class="token-note">* dev wallet, actually</div>
+    </div>
+    <div class="token-slice">
+      <span class="token-pct">20%</span>
+      <div class="token-name">ECOSYSTEM</div>
+      <div class="token-note">* also dev wallet</div>
+    </div>
+    <div class="token-slice">
+      <span class="token-pct">15%</span>
+      <div class="token-name">TEAM</div>
+      <div class="token-note">* locked for 1 day</div>
+    </div>
+    <div class="token-slice">
+      <span class="token-pct">15%</span>
+      <div class="token-name">TREASURY</div>
+      <div class="token-note">* marketing wallet</div>
+    </div>
+    <div class="token-slice">
+      <span class="token-pct">10%</span>
+      <div class="token-name">PUBLIC SALE</div>
+      <div class="token-note">* this part is real</div>
+    </div>
+  </div>
+</section>
+
+<div class="glow-divider"></div>
+
+<!-- ROADMAP -->
+
+<section id="roadmap">
+  <p class="section-header">// STRATEGIC TIMELINE //</p>
+  <h2 class="section-title">ROADMAP</h2>
+  <div class="roadmap">
+    <div class="roadmap-item done">
+      <div class="roadmap-phase">PHASE 0 — Q1 2026 — COMPLETE</div>
+      <div class="roadmap-title">Have Idea in Discord</div>
+      <div class="roadmap-desc">Conceptualized LARP AI over 3 hours in a Telegram voice chat. Someone said "what if we just admitted it was a larp" and everyone agreed. The whitepaper was started (first two paragraphs written).</div>
+    </div>
+    <div class="roadmap-item done">
+      <div class="roadmap-phase">PHASE 1 — Q1 2026 — COMPLETE</div>
+      <div class="roadmap-title">Launch Token, Make Website</div>
+      <div class="roadmap-desc">Deploy $LARPAI on pump.fun. Build website (this one). Create Twitter account. Post 47 tweets in first hour. Change profile picture 3 times. Call it a rebrand.</div>
+    </div>
+    <div class="roadmap-item">
+      <div class="roadmap-phase">PHASE 2 — Q2 2026 — IN PROGRESS</div>
+      <div class="roadmap-title">Grow Community to 10,000</div>
+      <div class="roadmap-desc">Aggressive marketing campaign (posting in other token's Telegrams). Influencer partnerships (DMing people who haven't responded). CEX listing applications (sent, no replies yet, very normal).</div>
+    </div>
+    <div class="roadmap-item">
+      <div class="roadmap-phase">PHASE 3 — Q3 2026 — PLANNED</div>
+      <div class="roadmap-title">Build the Product</div>
+      <div class="roadmap-desc">Hire one developer. Build something. We are deliberately vague about what the something is because we haven't decided yet. The something will be revolutionary. Scope TBD. Timeline TBD.</div>
+    </div>
+    <div class="roadmap-item never">
+      <div class="roadmap-phase">PHASE 4 — Q4 2026 — ASPIRATIONAL</div>
+      <div class="roadmap-title">Become Sentient</div>
+      <div class="roadmap-desc">LARP AI achieves actual general intelligence, surpassing human capability in all domains. Files for personhood. Lists on Binance. Dev retires. This phase has a 0% probability of occurring but we felt it was important to include.</div>
+    </div>
+  </div>
+</section>
+
+<div class="glow-divider"></div>
+
+<!-- TEAM -->
+
+<section id="team">
+  <p class="section-header">// CORE CONTRIBUTORS //</p>
+  <h2 class="section-title">THE TEAM</h2>
+  <div class="team-grid">
+    <div class="team-card">
+      <span class="team-avatar">👤</span>
+      <div class="team-name">ANON_DEV_1</div>
+      <div class="team-role">FOUNDER & CEO OF VIBES</div>
+      <div class="team-bio">Previously worked at a blockchain company (unspecified). 10 years experience (approximate). Has shipped multiple projects (some of which still exist). Doxxing planned for Q3 (probably not).</div>
+    </div>
+    <div class="team-card">
+      <span class="team-avatar">👤</span>
+      <div class="team-name">0XSHADOW.ETH</div>
+      <div class="team-role">HEAD OF TECHNOLOGY</div>
+      <div class="team-bio">Full stack developer. Familiar with Solidity (took course). Has a GitHub (private). Responsible for the smart contract (copy-pasted from a tutorial, with modifications). Available on Telegram (sometimes).</div>
+    </div>
+    <div class="team-card">
+      <span class="team-avatar">👤</span>
+      <div class="team-name">CRYPTOKIM</div>
+      <div class="team-role">CHIEF MARKETING OFFICER</div>
+      <div class="team-bio">5 years in marketing (Twitter posting). Fluent in memetics. Responsible for all graphics (made in Canva). Has 847 followers on Twitter, all of whom are real people and not bots. Results-driven professional.</div>
+    </div>
+    <div class="team-card">
+      <span class="team-avatar">👤</span>
+      <div class="team-name">THE ADVISOR</div>
+      <div class="team-role">STRATEGIC ADVISOR</div>
+      <div class="team-bio">Industry veteran. Previously advised several major projects (names withheld). Provides strategic guidance (replies to our messages occasionally). Compensation: a bag of tokens. Vesting: they already sold.</div>
+    </div>
+  </div>
+</section>
+
+<div class="glow-divider"></div>
+
+<!-- FAQ -->
+
+<section>
+  <p class="section-header">// FREQUENTLY ASKED QUESTIONS //</p>
+  <h2 class="section-title">FAQ</h2>
+  <div class="faq-list">
+    <div class="faq-item">
+      <div class="faq-q">Is LARP AI actually an AI?</div>
+      <div class="faq-a">No. The name refers to the practice of LARPing (Live Action Role Play) as an AI project. We are extremely transparent about this. This is the joke. You are reading the joke right now.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Is the whitepaper real?</div>
+      <div class="faq-a">The whitepaper is a real document that exists and can be read. Whether the contents constitute a "real" whitepaper is a philosophical question we decline to answer at this time.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Has the contract been audited?</div>
+      <div class="faq-a">The contract has been reviewed by Brayden, who is technically a person and therefore qualifies as a human audit. A formal audit is scheduled for Q4 2026 (2027 at the latest).</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">What are the real use cases?</div>
+      <div class="faq-a">Use cases include: buying it, holding it, selling it, and telling your friends about it. A fourth use case is under development and will be revealed in the Q3 roadmap update. It will be significant.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Will there be a V2?</div>
+      <div class="faq-a">Yes. V2 is coming. It has always been coming. It will continue to be coming for the foreseeable future. V2 is a state of mind as much as it is a product. We believe in V2 with our whole hearts.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Is this financial advice?</div>
+      <div class="faq-a">This is a parody website for a memecoin. Nothing here is financial advice. Nothing here is any kind of advice. This is entertainment. Please only invest what you can afford to completely lose, which with memecoins is a real possibility.</div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+
+<footer>
+  <span class="footer-logo">LARP<span style="color:var(--amber)">AI</span></span>
+  ©️ 2026 LARPAI SYSTEMS INC. (NOT A REAL COMPANY) &nbsp;·&nbsp; ALL RIGHTS PRETENDED<br>
+  BUILT ON SOLANA &nbsp;·&nbsp; POWERED BY VIBES &nbsp;·&nbsp; SECURED BY CONFIDENCE
+  <div class="disclaimer">
+    LARPAI is a satirical memecoin project. This website is parody. Nothing on this site constitutes financial, legal, or investment advice. The "whitepaper" is a joke document. The "team" are fictional characters. The "AI" does not exist. The "roadmap" is aspirational at best. Do not invest money you cannot afford to lose. Memecoins are extremely high risk. This disclaimer is the most honest thing on this website.
+  </div>
+</footer>
+
+</div><!-- end page-content -->
+
+<script>
+// Matrix rain background
+const matrixBg = document.getElementById('matrixBg');
+const chars = 'アイウエオカキクケコ01アイウエオ$LARPAI0101SOLANA∞NaN';
+for (let i = 0; i < 30; i++) {
+  const col = document.createElement('div');
+  col.className = 'matrix-col';
+  col.style.left = (i * 3.5) + '%';
+  col.style.animationDuration = (8 + Math.random() * 12) + 's';
+  col.style.animationDelay = (Math.random() * 10) + 's';
+  col.style.fontSize = (10 + Math.random() * 6) + 'px';
+  col.style.opacity = 0.3 + Math.random() * 0.7;
+  let text = '';
+  for (let j = 0; j < 40; j++) {
+    text += chars[Math.floor(Math.random() * chars.length)] + '\n';
+  }
+  col.textContent = text;
+  matrixBg.appendChild(col);
+}
+
+// Animate stat numbers
+const statNums = document.querySelectorAll('.stat-num');
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const el = e.target;
+      const val = el.textContent;
+      if (!isNaN(parseInt(val))) {
+        let start = 0;
+        const end = parseInt(val);
+        const timer = setInterval(() => {
+          start += Math.ceil(end / 20);
+          if (start >= end) { el.textContent = val; clearInterval(timer); }
+          else el.textContent = start + (val.includes('%') ? '%' : '');
+        }, 50);
+      }
+    }
+  });
+}, { threshold: 0.5 });
+statNums.forEach(el => observer.observe(el));
+
+// Glitch effect on title hover
+const title = document.querySelector('.hero-title');
+if (title) {
+  title.addEventListener('mouseover', () => {
+    title.style.animation = 'glitch 0.3s infinite';
+  });
+  title.addEventListener('mouseout', () => {
+    title.style.animation = 'fadeInUp 0.8s ease 0.2s forwards, glitch 10s infinite 3s';
+  });
+}
+</script>
+
+</body>
+</html>
